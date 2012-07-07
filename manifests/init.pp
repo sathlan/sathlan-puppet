@@ -4,7 +4,7 @@ class puppet(
   $dbpassword     = 'UNDEF',
   $dbserver       = 'UNDEF',
   $dbsocket       = 'UNDEF',
-  $certname       = 'UNDEF',
+  $certname       = "${::fqdn}.cert",
   $use_passenger   = false,
   $use_development = false,
   $use_testing     = false
