@@ -10,4 +10,6 @@ describe 'puppet' do
   it { should contain_package('libactiverecord-ruby1.8') }
   it { should contain_package('libsqlite3-ruby1.8') }
   it { should contain_package('sqlite3') }
+  it { should contain_file('/etc/puppet/puppet.conf') \
+      .with_content(/dbadapter .*sqlite3/)}
 end

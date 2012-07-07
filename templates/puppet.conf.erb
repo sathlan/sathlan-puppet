@@ -8,20 +8,20 @@
   # enable plugins sync (facts)
   pluginsync        = true
 
-<%  if @use_database -%>
-<%=   storeconfigs      = true %>
-<%=   case @dbadapter
-      when 'mysql'
+
+<%   case @dbadapter
+      when 'mysql' -%>
      # MySQL stored configuration
+     storeconfigs      = true
      dbadapter         = 'mysql'
-     dbuser            = @dbuser
-     dbpassword        = @dbpassword
-     dbserver          = @dbserver
-     dbsocket          = @dbsocket
-   when 'sqlite'
+     dbuser            = <%= @dbuser %>
+     dbpassword        = <%= @dbpassword %>
+     dbserver          = <%= @dbserver %>
+     dbsocket          = <%= @dbsocket %>
+<%  when 'sqlite3' -%>
+     storeconfigs      = true
      dbadapter         = 'sqlite3'
-   end %>
-<% end %>
+<%   end %>
 [master]
   certname          = <%= @certname %>
 
