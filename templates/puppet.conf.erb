@@ -1,0 +1,56 @@
+[main]
+  logdir            = /var/log/puppet
+  vardir            = /var/lib/puppet
+  ssldir            = /var/lib/puppet/ssl
+  rundir            = /var/run/puppet
+  factpath          = /var/lib/puppet/lib/facter
+
+  # enable plugins sync (facts)
+  pluginsync        = true
+
+<%  if @use_database -%>
+<%=   storeconfigs      = true %>
+<%=   case @dbadapter
+      when 'mysql'
+     # MySQL stored configuration
+     dbadapter         = 'mysql'
+     dbuser            = @dbuser
+     dbpassword        = @dbpassword
+     dbserver          = @dbserver
+     dbsocket          = @dbsocket
+   when 'sqlite'
+     dbadapter         = 'sqlite3'
+   end %>
+<% end %>
+[master]
+  certname          = <%= @certname %>
+
+  # ENC (mis en pause pour l'instant..)
+  #external_nodes    = /etc/puppet/enc/foreman_external_node.rb
+  #node_terminus     = exec
+
+  # reporting
+  reports           = log
+
+<% if @use_passenger -%>
+   # These are needed when the puppetmaster is run by passenger
+   # and can safely be removed if webrick is used.
+   ssl_client_header = SSL_CLIENT_S_DN
+   ssl_client_verify_header = SSL_CLIENT_VERIFY
+<% end -%>
+
+[production]
+  modulepath        = /etc/puppet/environments/production/modules
+  manifest          = /etc/puppet/environments/production/manifests/site.pp
+
+<% if @use_testing -%>
+[testing]
+  modulepath        = /etc/puppet/environments/testing/modules
+  manifest          = /etc/puppet/environments/testing/manifests/site.pp
+<% end -%>
+
+<% if @use_development -%>
+[development]
+  modulepath        = /etc/puppet/environments/development/modules
+  manifest          = /etc/puppet/environments/development/manifests/site.pp
+<% end -%>
