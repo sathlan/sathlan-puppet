@@ -12,15 +12,15 @@
 <%   case @dbadapter
       when 'mysql' -%>
      # MySQL stored configuration
-     storeconfigs      = true
-     dbadapter         = 'mysql'
-     dbuser            = <%= @dbuser %>
-     dbpassword        = <%= @dbpassword %>
-     dbserver          = <%= @dbserver %>
-     dbsocket          = <%= @dbsocket %>
+  storeconfigs      = true
+  dbadapter         = 'mysql'
+  dbuser            = <%= @dbuser %>
+  dbpassword        = <%= @dbpassword %>
+  dbserver          = <%= @dbserver %>
+  dbsocket          = <%= @dbsocket %>
 <%  when 'sqlite3' -%>
-     storeconfigs      = true
-     dbadapter         = 'sqlite3'
+  storeconfigs      = true
+  dbadapter         = 'sqlite3'
 <%   end %>
 [master]
   certname          = <%= @certname %>
