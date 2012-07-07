@@ -20,10 +20,15 @@ class puppet::install ($use_db = false, $use_passenger = false){
       }
     }
   }
-  package { 'puppetmaster':
+  package { 'puppetmaster-common':
     ensure => '2.7.14-1~bpo60+1'
   }
+  package { 'puppetmaster':
+    ensure => '2.7.14-1~bpo60+1',
+    require => Package['puppetmaster-common'],
+  }
   package { 'facter':
-    ensure => '1.6.9-2~bpo60+2'
+    ensure => '1.6.9-2~bpo60+2',
+    require => Package['puppetmaster-common'],
   }
 }
