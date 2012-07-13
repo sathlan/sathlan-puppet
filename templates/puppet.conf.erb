@@ -41,7 +41,7 @@
 
 [production]
   modulepath        = <%= @prod_modules %>
-  manifest          = /etc/puppet/environments/production/manifests/site.pp
+  manifest          = <%= @prod_manifest %>
 
 <% if @use_testing -%>
 [testing]

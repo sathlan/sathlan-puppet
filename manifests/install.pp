@@ -1,13 +1,11 @@
 class puppet::install ($use_db = false, $use_passenger = false){
-
+  class { 'enovance::repository':}
   if $use_passenger {
     # TODO
     class { 'passenger':}
   }
   if $use_db != 'UNDEF' {
-    package{ 'libactiverecord-ruby1.8':
-      ensure => present,
-    }
+    package{ 'libactiverecord-ruby1.8': }
     case $use_db {
       'mysql': {
         # TODO
@@ -20,15 +18,14 @@ class puppet::install ($use_db = false, $use_passenger = false){
       }
     }
   }
-  package { 'puppetmaster-common':
-    ensure => '2.7.14-1~bpo60+1'
+  apt::force { 'puppetmaster':
+    release => 'squeeze-backports',
+    version => '2.7.14-1',
+    require => Class['Enovance::Repository']
   }
-  package { 'puppetmaster':
-    ensure => '2.7.14-1~bpo60+1',
-    require => Package['puppetmaster-common'],
-  }
-  package { 'facter':
-    ensure => '1.6.9-2~bpo60+2',
-    require => Package['puppetmaster-common'],
+  apt::force { 'facter':
+    release => 'squeeze-backports',
+    version => '1.6.9-2',
+    require => Class['Enovance::Repository']
   }
 }

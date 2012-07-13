@@ -16,9 +16,11 @@ describe 'puppet' do
         .with_content(/dbadapter .*sqlite3/).with_content(/test.example.com.cert/) \
         .with_content(/modulepath .*environments\/production\/modules/)}
   end
-  describe "Modulepath is set correctly" do
-    let(:params) { {:prod_modules => '/tmp/test'} }
+  describe "Path for module and manifest is set correctly" do
+    let(:params) { {:prod_modules => '/tmp/test', :prod_manifest => '/tmp/site.pp'} }
     it { should contain_file('/etc/puppet/puppet.conf') \
-        .with_content(/modulepath .*\/tmp\/test/)}
+        .with_content(/modulepath .*\/tmp\/test/) \
+        .with_content(/manifest.*=\s* \/tmp\/site.pp/)
+    }
   end
 end

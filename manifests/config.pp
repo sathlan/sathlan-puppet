@@ -1,11 +1,11 @@
-class puppet::config ($puppet_tmpl = 'UNDEF', fileserv_templ = 'UNDEF') inherits puppet {
+class puppet::config ($puppet_tmpl = 'UNDEF', $fileserv_templ = 'UNDEF') inherits puppet {
   $puppet_conf = $puppet_tmpl ? {
     'UNDEF' => template('puppet/puppet.conf.erb'),
     default => $puppet_tmpl
   }
-  $fileserver_conf = $fileserv_tmpl ? {
+  $fileserver_conf = $fileserv_templ ? {
     'UNDEF' => template('puppet/fileserver.conf.erb'),
-    default => $fileservr_tmpl
+    default => $fileserv_templ
   }
 
   file { "/etc/puppet/puppet.conf":
