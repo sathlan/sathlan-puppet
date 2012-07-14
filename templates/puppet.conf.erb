@@ -24,7 +24,9 @@
 <%   end %>
 [master]
   certname          = <%= @certname -%>
-
+  <% if @dns_alt_names != 'UNDEF' -%>
+  dns_alt_names     = <%= @dns_alt_names -%>
+  <% end -%>
   # reporting
   reports           = log
 

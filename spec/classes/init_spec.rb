@@ -23,4 +23,10 @@ describe 'puppet' do
         .with_content(/manifest.*=\s* \/tmp\/site.pp/)
     }
   end
+  describe "Alt cert name is taken into account" do
+    let(:params) { {:dns_alt_names => 'my-alt-cert-name.example.com'} }
+    it { should contain_file('/etc/puppet/puppet.conf') \
+        .with_content(/dns_alt_names.*=.*my-alt-cert-name.example.com/)
+    }
+  end
 end

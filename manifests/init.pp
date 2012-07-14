@@ -5,6 +5,7 @@ class puppet(
   $dbserver       = 'UNDEF',
   $dbsocket       = 'UNDEF',
   $certname       = $certname_default,
+  $dns_alt_names  = 'UNDEF',
   $prod_modules   = $prod_modules_default,
   $prod_manifest  = $prod_manifest_default,
   $use_passenger   = false,
