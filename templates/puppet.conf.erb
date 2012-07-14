@@ -14,18 +14,18 @@
      # MySQL stored configuration
   storeconfigs      = true
   dbadapter         = 'mysql'
-  dbuser            = <%= @dbuser -%>
-  dbpassword        = <%= @dbpassword -%>
-  dbserver          = <%= @dbserver -%>
-  dbsocket          = <%= @dbsocket -%>
+  dbuser            = <%= @dbuser %>
+  dbpassword        = <%= @dbpassword %>
+  dbserver          = <%= @dbserver %>
+  dbsocket          = <%= @dbsocket %>
 <%  when 'sqlite3' -%>
   storeconfigs      = true
   dbadapter         = 'sqlite3'
 <%   end %>
 [master]
-  certname          = <%= @certname -%>
+  certname          = <%= @certname %>
   <% if @dns_alt_names != 'UNDEF' -%>
-  dns_alt_names     = <%= @dns_alt_names -%>
+  dns_alt_names     = <%= @dns_alt_names %>
   <% end -%>
   # reporting
   reports           = log
