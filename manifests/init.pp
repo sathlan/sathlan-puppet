@@ -10,7 +10,8 @@ class puppet(
   $prod_manifest  = $prod_manifest_default,
   $use_passenger   = false,
   $use_development = false,
-  $use_testing     = false
+  $use_testing     = false,
+  $add_agent       = false,
   ) inherits puppet::params {
 #  include stdlib
 #  validate_bool($use_passenger)
@@ -21,6 +22,7 @@ class puppet(
   class { 'puppet::install':
     use_db => $dbadapter,
     use_passenger => $use_passenger,
+    add_agent     => $add_agent,
   }
   class { 'puppet::config': }
 }

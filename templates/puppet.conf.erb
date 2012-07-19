@@ -52,3 +52,20 @@
   modulepath        = /etc/puppet/environments/development/modules
   manifest          = /etc/puppet/environments/development/manifests/site.pp
 <% end -%>
+
+<% if @add_agent -%>
+
+[agent]
+  # puppet master address
+  server            = <%= @certname %>
+
+  # synchronize fact
+  pluginsync        = true
+
+  # set environment
+  environment       = production
+
+  # enable reporting
+  report            = true
+  certname          = <%= @certname %>
+<% end -%>

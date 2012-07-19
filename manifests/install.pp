@@ -1,5 +1,4 @@
-class puppet::install ($use_db = false, $use_passenger = false){
-  class { 'enovance::repository':}
+class puppet::install ($use_db = false, $use_passenger = false, $add_agent = false){
   if $use_passenger {
     # TODO
     class { 'passenger':}
