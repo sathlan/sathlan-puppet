@@ -8,8 +8,7 @@ class puppet::install ($use_db = false, $use_passenger = false){
     package{ 'libactiverecord-ruby1.8': }
     case $use_db {
       'mysql': {
-        # TODO
-        class { 'mysql': }
+        # TODO: find a better system to require thing.  It's all external at the moment.
       }
       'sqlite3': {
         package{ ['sqlite3', 'libsqlite3-ruby1.8']:
