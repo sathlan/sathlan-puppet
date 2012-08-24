@@ -12,7 +12,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         owner  => 'puppet',
         group  => 'puppet',
         mode   => '0755',
-        require => File['/var/lib/puppet/rack/public'];
+        require => File['/var/lib/puppet/rack'];
       '/var/lib/puppet/rack/public/puppet':
         ensure => '/usr/lib/ruby/1.8/puppet',
         require => File['/var/lib/puppet/rack/public'];
