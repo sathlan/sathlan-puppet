@@ -18,7 +18,9 @@ class puppet(
 #  validate_bool($use_production)
 #  validate_bool($use_testing)
 #  validate_bool($use_development)
-  class { 'puppet::service': }
+  class { 'puppet::service':
+    use_passenger => $use_passenger
+  }
   class { 'puppet::install':
     use_db => $dbadapter,
     use_passenger => $use_passenger,
