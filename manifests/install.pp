@@ -1,5 +1,30 @@
 class puppet::install ($use_db = false, $use_passenger = false, $add_agent = false){
   if $use_passenger {
+    file {
+      '/var/lib/puppet/rack':
+        ensure => directory,
+        owner  => 'puppet',
+        group  => 'puppet',
+        mode   => '0755',
+        require => Apt::Force['puppetmaster'];
+      '/var/lib/puppet/rack/public':
+        ensure => directory,
+        owner  => 'puppet',
+        group  => 'puppet',
+        mode   => '0755',
+        require => File['/var/lib/puppet/rack/public'];
+      '/var/lib/puppet/rack/public/puppet':
+        ensure => '/usr/lib/ruby/1.8/puppet',
+        require => File['/var/lib/puppet/rack/public'];
+      '/var/lib/puppet/rack/config.ru':
+        ensure => present,
+        source => 'puppet:///enovance/puppet/rack/config.ru',
+        owner  => 'puppet',
+        group  => 'puppet',
+        mode   => '0755',
+        require => File['/var/lib/puppet/rack'];
+    }
+
     class { 'apache': }
     class { 'apache::ssl': }
     class { 'apache::passenger': }
