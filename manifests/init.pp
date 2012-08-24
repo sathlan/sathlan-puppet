@@ -12,6 +12,7 @@ class puppet(
   $use_development = false,
   $use_testing     = false,
   $add_agent       = false,
+  $puppetmaster_name = 'NONE',
   ) inherits puppet::params {
 #  include stdlib
 #  validate_bool($use_passenger)
@@ -25,6 +26,7 @@ class puppet(
     use_db => $dbadapter,
     use_passenger => $use_passenger,
     add_agent     => $add_agent,
+    puppetmaster_name => $puppetmaster_name,
   }
   class { 'puppet::config': }
 }

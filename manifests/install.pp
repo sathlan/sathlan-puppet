@@ -1,4 +1,4 @@
-class puppet::install ($use_db = false, $use_passenger = false, $add_agent = false){
+class puppet::install ($use_db = false, $use_passenger = false, $add_agent = false, $puppetmaster_name='NONE'){
   if $use_passenger {
     file {
       '/var/lib/puppet/rack':
@@ -28,7 +28,12 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     class { 'apache': }
     class { 'apache::ssl': }
     class { 'apache::passenger': }
-    apache::virtualhost { "$::fqdn":
+    if ($puppetmaster_name == 'NONE') {
+      $vhost = "$::fqdn"
+    } else {
+      $vhost = $puppetmaster_name
+    }
+    apache::virtualhost { "$vhost":
       templatepath => 'enovance/apache/vhosts',
       templatefile => 'passenger_puppet.conf.erb',
       create_docroot => true,
