@@ -22,14 +22,4 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       }
     }
   }
-  apt::force { 'puppetmaster':
-    release => 'squeeze-backports',
-    version => '2.7.14-1',
-    require => Class['Enovance::Repository']
-  }
-  apt::force { 'facter':
-    release => 'squeeze-backports',
-    version => '1.6.9-2',
-    require => Class['Enovance::Repository']
-  }
 }
