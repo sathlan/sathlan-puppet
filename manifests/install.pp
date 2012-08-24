@@ -1,7 +1,13 @@
 class puppet::install ($use_db = false, $use_passenger = false, $add_agent = false){
   if $use_passenger {
-    # TODO
-    class { 'passenger':}
+    class { 'apache': }
+    class { 'apache::ssl': }
+    class { 'apache::passenger': }
+    apache::virtualhost { "$::fqdn":
+      templatepath => 'enovance/apache/vhosts',
+      templatefile => 'passenger_puppet.conf.erb',
+      create_docroot => true,
+    }
   }
   if $use_db != 'UNDEF' {
     package{ 'libactiverecord-ruby1.8': }
