@@ -24,10 +24,19 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         mode   => '0755',
         require => File['/var/lib/puppet/rack'];
     }
-
     class { 'apache': }
     class { 'apache::ssl': }
     class { 'apache::passenger': }
+    package { [ 'apache2-mpm-worker', 'librack-ruby']:
+      ensure => installed,
+      require => Class['apache::passenger']
+    }
+
+    package { "rack":
+      provider => gem,
+      ensure   => installed,
+    }
+
     if ($puppetmaster_name == 'NONE') {
       $vhost = "$::fqdn"
     } else {
