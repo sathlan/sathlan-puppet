@@ -27,7 +27,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     class { 'apache': }
     class { 'apache::ssl': }
     class { 'apache::passenger': }
-    package { [ 'apache2-mpm-worker', 'librack-ruby']:
+    package { [ 'apache2-mpm-worker', 'librack-ruby', 'ruby-passenger']:
       ensure => installed,
       require => Class['apache::passenger']
     }
