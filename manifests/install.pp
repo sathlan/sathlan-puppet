@@ -42,16 +42,28 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     } else {
       $vhost = $puppetmaster_name
     }
+    file {'/var/www':
+      ensure => directory,
+      mode   => '0755',
+      owner  => 'root',
+      group  => 'www-data',
+      require => Class['apache']
+    }
     apache::virtualhost { "$vhost":
       templatepath => 'enovance/apache/vhosts',
       templatefile => 'passenger_puppet.conf.erb',
       create_docroot => true,
+      require => Package['apache'],
     }
   }
+
   if $use_db != 'UNDEF' {
     package{ 'libactiverecord-ruby1.8': }
     case $use_db {
       'mysql': {
+        package { 'libmysql-ruby1.8':
+          ensure => present,
+        }
         # TODO: find a better system to require thing.  It's all external at the moment.
       }
       'sqlite3': {
@@ -61,10 +73,10 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       }
     }
   }
+
   apt::force { 'puppetmaster':
     release => 'squeeze-backports',
     version => '2.7.18-1',
     require => Class['Enovance::Repository']
   }
-
 }
