@@ -38,9 +38,11 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     }
 
     if ($puppetmaster_name == 'NONE') {
+      $puppetmaster = "$::fqdn"
       $vhost = "$::fqdn"
     } else {
       $vhost = $puppetmaster_name
+      $puppetmaster = $puppetmaster_name
     }
     file {'/var/www':
       ensure => directory,
