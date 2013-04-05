@@ -12,6 +12,7 @@ class puppet(
   $use_development = false,
   $use_testing     = false,
   $add_agent       = false,
+  $configtimeout   = 'UNDEF',
   $puppetmaster_name = 'NONE',
   ) inherits puppet::params {
 #  include stdlib

@@ -68,4 +68,8 @@
   # enable reporting
   report            = true
   certname          = <%= @certname %>
+<% if @configtimeout != 'UNDEF' -%>
+  configtimeout     = <%= @configtimeout %>
+<% end %>
+
 <% end -%>
