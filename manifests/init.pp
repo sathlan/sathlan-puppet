@@ -14,6 +14,8 @@ class puppet(
   $add_agent       = false,
   $configtimeout   = 'UNDEF',
   $puppetmaster_name = 'NONE',
+  $reports = 'log',
+  $reporturl = false,
   $environments = [],
   ) inherits puppet::params {
 #  include stdlib

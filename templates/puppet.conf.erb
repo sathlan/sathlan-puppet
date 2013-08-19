@@ -28,7 +28,10 @@
   dns_alt_names     = <%= @dns_alt_names %>
   <% end -%>
   # reporting
-  reports           = log
+  reports           = <%= reports %>
+<% if reporturl -%>
+  reporturl = <%= reporturl %>
+<% end -%>
 
 <% if @use_passenger -%>
    # These are needed when the puppetmaster is run by passenger
