@@ -14,6 +14,7 @@ class puppet(
   $add_agent       = false,
   $configtimeout   = 'UNDEF',
   $puppetmaster_name = 'NONE',
+  $environments = [],
   ) inherits puppet::params {
 #  include stdlib
 #  validate_bool($use_passenger)

@@ -53,6 +53,16 @@
   manifest          = /etc/puppet/environments/development/manifests/site.pp
 <% end -%>
 
+<% if environments -%>
+  <% environments.each do |e| -%>
+[<%= e['name'] %>]
+  <% e.each_pair do |k, v| -%>
+    <% next if k == 'name' -%>
+<%= k %> = <%= v %>
+    <% end -%>
+  <% end -%>
+<% end -%>
+
 <% if @add_agent -%>
 
 [agent]
