@@ -5,8 +5,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         ensure => directory,
         owner  => 'puppet',
         group  => 'puppet',
-        mode   => '0755',
-        require => Apt::Force['puppetmaster'];
+        mode   => '0755';
       '/var/lib/puppet/rack/public':
         ensure => directory,
         owner  => 'puppet',
@@ -74,11 +73,5 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         }
       }
     }
-  }
-
-  apt::force { 'puppetmaster':
-    release => 'squeeze-backports',
-    version => '2.7.18-1',
-    require => Class['Enovance::Repository']
   }
 }
