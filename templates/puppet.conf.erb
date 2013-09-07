@@ -9,6 +9,7 @@
   pluginsync        = true
 
 
+[master]
 <%   case @dbadapter
       when 'mysql' -%>
      # MySQL stored configuration
@@ -22,7 +23,6 @@
   storeconfigs      = true
   dbadapter         = 'sqlite3'
 <%   end %>
-[master]
   certname          = <%= @certname %>
   <% if @dns_alt_names != 'UNDEF' -%>
   dns_alt_names     = <%= @dns_alt_names %>
