@@ -26,4 +26,13 @@ class puppet::config ($puppet_tmpl = 'UNDEF', $fileserv_templ = 'UNDEF') inherit
     require => Class["puppet::install"],
     notify => Class['puppet::service'],
   }
+  file { "/etc/puppet/autosign.conf":
+    ensure => present,
+    content => '*',
+    owner => root,
+    group => puppet,
+    mode => 0640,
+    require => Class["puppet::install"],
+    notify => Class['puppet::service'],
+  }
 }
