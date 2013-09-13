@@ -31,7 +31,7 @@ class puppet::config ($puppet_tmpl = 'UNDEF', $fileserv_templ = 'UNDEF') inherit
     content => '*',
     owner => root,
     group => puppet,
-    mode => 0640,
+    mode => 0644,
     require => Class["puppet::install"],
     notify => Class['puppet::service'],
   }
