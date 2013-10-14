@@ -42,7 +42,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       $the_puppetmaster = $puppetmaster_name
     }
 
-    apache::virtualhost { "$vhost":
+    apache::vhost { "$vhost":
       port            => '8140',
       default_vhost   => true,
       ssl             => true,
