@@ -44,7 +44,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
 
     apache::vhost { "$vhost":
       port            => '8140',
-      docroot         => '/var/www'
+      docroot         => '/var/www',
       default_vhost   => true,
       ssl             => true,
       ssl_cert        => "/var/lib/puppet/ssl/certs/${the_puppetmaster}.pem",
