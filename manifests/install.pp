@@ -51,7 +51,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       ssl_key         => "/var/lib/puppet/ssl/private_keys/${the_puppetmaster}.pem",
       ssl_chain       => '/var/lib/puppet/ssl/ca/ca_crt.pem',
       ssl_ca          => '/var/lib/puppet/ssl/ca/ca_crt.pem',
-      ssl_crl_path    => '/var/lib/puppet/ssl/ca/ca_crl.pem',
+      ssl_crl         => '/var/lib/puppet/ssl/ca/ca_crl.pem',
       custom_fragment => "SSLVerifyClient optional\nSSLVerifyDepth  1\nSSLOptions +StdEnvVars\nSSLProtocol -ALL +SSLv3 +TLSv1\nSSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP\n",
       directories     => [
                       {
