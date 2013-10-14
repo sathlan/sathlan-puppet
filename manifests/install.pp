@@ -28,11 +28,11 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     }
     class { 'apache::mod::ssl': }
     class { 'apache::mod::passenger':
-      passenger_high_performance => true,
+      passenger_high_performance => 'On',
       passenger_pool_idle_time => 1500,
       passenger_max_pool_size => 12,
-      rack_autodetect => true,
-      rails_autodetect => true,
+      rack_autodetect => 'On',
+      rails_autodetect => 'On',
     }
     if ($puppetmaster_name == 'NONE') {
       $the_puppetmaster = "$::fqdn"
