@@ -6,8 +6,12 @@ class puppet(
   $dbsocket       = 'UNDEF',
   $certname       = $certname_default,
   $dns_alt_names  = 'UNDEF',
-  $prod_modules   = $prod_modules_default,
-  $prod_manifest  = $prod_manifest_default,
+  $environments   = {
+    'production' => {
+      'manifest_path' => '/etc/puppet/environments/production/manifests/site.pp',
+      'modules_path'   => '/etc/puppet/environments/production/modules',
+    }
+  },
   $use_passenger   = false,
   $use_development = false,
   $use_testing     = false,
@@ -16,7 +20,6 @@ class puppet(
   $puppetmaster_name = 'NONE',
   $reports = 'log',
   $reporturl = false,
-  $environments = [],
   ) inherits puppet::params {
 #  include stdlib
 #  validate_bool($use_passenger)

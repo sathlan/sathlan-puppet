@@ -40,30 +40,10 @@
    ssl_client_verify_header = SSL_CLIENT_VERIFY
 <% end -%>
 
-[production]
-  modulepath        = <%= @prod_modules %>
-  manifest          = <%= @prod_manifest %>
-
-<% if @use_testing -%>
-[testing]
-  modulepath        = /etc/puppet/environments/testing/modules
-  manifest          = /etc/puppet/environments/testing/manifests/site.pp
-<% end -%>
-
-<% if @use_development -%>
-[development]
-  modulepath        = /etc/puppet/environments/development/modules
-  manifest          = /etc/puppet/environments/development/manifests/site.pp
-<% end -%>
-
-<% if environments -%>
-  <% environments.each do |e| -%>
-[<%= e['name'] %>]
-  <% e.each_pair do |k, v| -%>
-    <% next if k == 'name' -%>
-<%= k %> = <%= v %>
-    <% end -%>
-  <% end -%>
+<% environment.each do |e, p| -%>
+[<%= e -%>]
+  modulepath        = <%= p['modules_path'] %>
+  manifest          = <%= p['manifest_path'] %>
 <% end -%>
 
 <% if @add_agent -%>
