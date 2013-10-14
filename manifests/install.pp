@@ -23,19 +23,17 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         mode   => '0755',
         require => File['/var/lib/puppet/rack'];
     }
-    class { 'apache': }
-    class { 'apache::ssl': }
-    class { 'apache::passenger': }
-    package { [ 'apache2-mpm-worker', 'librack-ruby', 'ruby-passenger']:
-      ensure => installed,
-      require => Class['apache::passenger']
+    class { 'apache':
+      mpm_module => 'worker',
     }
-
-    package { "rack":
-      provider => gem,
-      ensure   => installed,
+    class { 'apache::mod::ssl': }
+    class { 'apache::mod::passenger':
+      passenger_high_performance => true,
+      passenger_pool_idle_time => 1500,
+      passenger_max_pool_size => 12,
+      rack_autodetect => true,
+      rails_autodetect => true,
     }
-
     if ($puppetmaster_name == 'NONE') {
       $the_puppetmaster = "$::fqdn"
       $vhost = "$::fqdn"
@@ -43,18 +41,27 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       $vhost = $puppetmaster_name
       $the_puppetmaster = $puppetmaster_name
     }
-    file {'/var/www':
-      ensure => directory,
-      mode   => '0755',
-      owner  => 'root',
-      group  => 'www-data',
-      require => Class['apache']
-    }
+
     apache::virtualhost { "$vhost":
-      templatepath => 'enovance/apache/vhosts',
-      templatefile => 'passenger_puppet.conf.erb',
-      create_docroot => true,
-      require => Package['apache'],
+      port            => '8140',
+      default_vhost   => true,
+      ssl             => true,
+      ssl_cert        => "/var/lib/puppet/ssl/certs/${the_puppetmaster}.pem",
+      ssl_key         => "/var/lib/puppet/ssl/private_keys/${the_puppetmaster}.pem",
+      ssl_chain       => '/var/lib/puppet/ssl/ca/ca_crt.pem',
+      ssl_ca          => '/var/lib/puppet/ssl/ca/ca_crt.pem',
+      ssl_crl_path    => '/var/lib/puppet/ssl/ca/ca_crl.pem',
+      custom_fragment => "SSLVerifyClient optional\nSSLVerifyDepth  1\nSSLOptions +StdEnvVars\nSSLProtocol -ALL +SSLv3 +TLSv1\nSSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP\n",
+      directories     => [
+                      {
+                      path              => '/var/lib/puppet/rack/public/',
+                      options           => ['None', '-MultiViews'],
+                      order             => 'allow,deny',
+                      allow             => 'from all',
+                      allowOverride     => ['None'],
+                      passenger_enabled => 'on',
+                      },
+                      ],
     }
   }
 
