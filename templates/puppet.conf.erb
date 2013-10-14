@@ -40,7 +40,7 @@
    ssl_client_verify_header = SSL_CLIENT_VERIFY
 <% end -%>
 
-<% environment.each do |e, p| -%>
+<% environments.each do |e, p| -%>
 [<%= e -%>]
   modulepath        = <%= p['modules_path'] %>
   manifest          = <%= p['manifest_path'] %>
