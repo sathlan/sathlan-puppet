@@ -7,20 +7,20 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         group  => 'puppet',
         mode   => '0755';
       '/var/lib/puppet/rack/public':
-        ensure => directory,
-        owner  => 'puppet',
-        group  => 'puppet',
-        mode   => '0755',
+        ensure  => directory,
+        owner   => 'puppet',
+        group   => 'puppet',
+        mode    => '0755',
         require => File['/var/lib/puppet/rack'];
       '/var/lib/puppet/rack/public/puppet':
-        ensure => '/usr/lib/ruby/1.8/puppet',
+        ensure  => '/usr/lib/ruby/1.8/puppet',
         require => File['/var/lib/puppet/rack/public'];
       '/var/lib/puppet/rack/config.ru':
-        ensure => present,
-        source => 'puppet:///enovance/puppet/rack/config.ru',
-        owner  => 'puppet',
-        group  => 'puppet',
-        mode   => '0755',
+        ensure  => present,
+        source  => 'puppet:///modules/enovance/puppet/rack/config.ru',
+        owner   => 'puppet',
+        group   => 'puppet',
+        mode    => '0755',
         require => File['/var/lib/puppet/rack'];
     }
     class { 'apache':
@@ -28,21 +28,21 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     }
     class { 'apache::mod::ssl': }
     class { 'apache::mod::passenger':
-      passenger_high_performance => 'On',
-      passenger_pool_idle_time => 1500,
-      passenger_max_pool_size => 12,
-      rack_autodetect => 'On',
-      rails_autodetect => 'On',
+      passenger_high_performance  => 'On',
+      passenger_pool_idle_time    => 1500,
+      passenger_max_pool_size     => 12,
+      rack_autodetect             => 'On',
+      rails_autodetect            => 'On',
     }
     if ($puppetmaster_name == 'NONE') {
-      $the_puppetmaster = "$::fqdn"
-      $vhost = "$::fqdn"
+      $the_puppetmaster = $::fqdn
+      $vhost = $::fqdn
     } else {
       $vhost = $puppetmaster_name
       $the_puppetmaster = $puppetmaster_name
     }
 
-    apache::vhost { "$vhost":
+    apache::vhost { $vhost:
       port            => '8140',
       docroot         => '/var/lib/puppet/rack/public/',
       default_vhost   => true,
