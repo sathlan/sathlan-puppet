@@ -45,7 +45,6 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     package { "puppetlabs-release-${lsbdistcodename}.deb":
       provider => 'dpkg',
       source   => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
-      creates  => '/etc/apt/sources.list.d/puppetlabs.list',
       require  => Exec['puppet-fetch-release'],
       notify   => Exec['puppet-apt-get-update'],
     }
