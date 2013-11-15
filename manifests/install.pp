@@ -44,14 +44,10 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
 
     package { "puppetlabs-release-${lsbdistcodename}.deb":
       provider => 'dpkg',
+      ensure   => 'installed',
       source   => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
       require  => Exec['puppet-fetch-release'],
-      notify   => Exec['puppet-apt-get-update'],
-    }
-
-    exec { 'puppet-apt-get-update':
-      refreshonly => true,
-      command     => '/usr/bin/apt-get update',
+      notify   => Exec['apt_update'],
     }
 
     class { 'apache':
