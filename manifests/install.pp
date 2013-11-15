@@ -36,8 +36,9 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
 
     }
     exec { 'puppet-fetch-release':
-      command => "cd /etc/src/ && wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
+      command => "/usr/bin/wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
       create  => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
+      cwd     => '/usr/src',
     }
 
     package { "puppetlabs-release-${lsbdistcodename}.deb":

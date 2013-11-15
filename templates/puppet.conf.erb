@@ -22,6 +22,9 @@
 <%  when 'sqlite3' -%>
   storeconfigs      = true
   dbadapter         = 'sqlite3'
+<% when 'puppetdb' -%>
+  storeconfigs      = true
+  storeconfigs_backend = puppetdb
 <%   end %>
   certname          = <%= @certname %>
   <% if @dns_alt_names != 'UNDEF' -%>
