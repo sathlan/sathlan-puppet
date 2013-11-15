@@ -16,7 +16,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         ensure  => '/usr/lib/ruby/1.8/puppet',
         require => File['/var/lib/puppet/rack/public'];
     }
-    if ($::puppetversion ~= /^2/) {
+    if ($::puppetversion =~ /^2/) {
       '/var/lib/puppet/rack/config.ru':
         ensure  => present,
         source  => 'puppet:///modules/config.ru',
