@@ -23,6 +23,17 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         mode    => '0755',
         require => File['/var/lib/puppet/rack'];
     }
+    exec { 'puppet-fetch-release':
+      command => "cd /etc/src/ && wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
+      create  => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
+    }
+
+    package { "puppetlabs-release-${lsbdistcodename}.deb":
+      provider => 'dpkg',
+      source   => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
+      require  => Exec['puppet-fetch-release'],
+    }
+
     class { 'apache':
       mpm_module => 'worker',
     }
@@ -79,6 +90,10 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         package{ ['sqlite3', 'libsqlite3-ruby1.8']:
           ensure => present,
         }
+      }
+      'puppetdb': {
+        class { 'puppetdb': }
+        class { 'puppetdb::master::config': }
       }
     }
   }
