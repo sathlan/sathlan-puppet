@@ -38,14 +38,14 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     }
     exec { 'puppet-fetch-release':
       command => "/usr/bin/wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
-      create  => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
+      creates => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
       cwd     => '/usr/src',
     }
 
     package { "puppetlabs-release-${lsbdistcodename}.deb":
       provider => 'dpkg',
       source   => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
-      create   => '/etc/apt/sources.list.d/puppetlabs.list',
+      creates  => '/etc/apt/sources.list.d/puppetlabs.list',
       require  => Exec['puppet-fetch-release'],
       notify   => Exec['puppet-apt-get-update'],
     }
