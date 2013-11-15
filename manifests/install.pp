@@ -25,7 +25,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         group   => 'puppet',
         mode    => '0755',
         require => File['/var/lib/puppet/rack'],
-
+      }
     } else {
       file { '/var/lib/puppet/rack/config.ru':
         ensure  => present,
@@ -33,8 +33,8 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         owner   => 'puppet',
         group   => 'puppet',
         mode    => '0755',
-        require => File['/var/lib/puppet/rack']
-
+        require => File['/var/lib/puppet/rack'],
+      }
     }
     exec { 'puppet-fetch-release':
       command => "/usr/bin/wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
