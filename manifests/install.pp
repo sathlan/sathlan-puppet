@@ -20,7 +20,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     if $::puppetversion =~ /^2/ {
       file { '/var/lib/puppet/rack/config.ru':
         ensure  => present,
-        source  => 'puppet:///config.ru',
+        source  => 'puppet:///modules/puppet/config.ru',
         owner   => 'puppet',
         group   => 'puppet',
         mode    => '0755',
@@ -29,7 +29,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     } else {
       file { '/var/lib/puppet/rack/config.ru':
         ensure  => present,
-        source  => 'puppet:///config-new.ru',
+        source  => 'puppet:///modules/puppet/config-new.ru',
         owner   => 'puppet',
         group   => 'puppet',
         mode    => '0755',
