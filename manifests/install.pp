@@ -15,13 +15,25 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       '/var/lib/puppet/rack/public/puppet':
         ensure  => '/usr/lib/ruby/1.8/puppet',
         require => File['/var/lib/puppet/rack/public'];
+    }
+    if ($::puppetversion ~= /^2/) {
       '/var/lib/puppet/rack/config.ru':
         ensure  => present,
-        source  => 'puppet:///modules/enovance/puppet/rack/config.ru',
+        source  => 'puppet:///modules/config.ru',
         owner   => 'puppet',
         group   => 'puppet',
         mode    => '0755',
         require => File['/var/lib/puppet/rack'];
+
+    } else {
+      '/var/lib/puppet/rack/config.ru':
+        ensure  => present,
+        source  => 'puppet:///modules/config-new.ru',
+        owner   => 'puppet',
+        group   => 'puppet',
+        mode    => '0755',
+        require => File['/var/lib/puppet/rack'];
+
     }
     exec { 'puppet-fetch-release':
       command => "cd /etc/src/ && wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
@@ -31,7 +43,14 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     package { "puppetlabs-release-${lsbdistcodename}.deb":
       provider => 'dpkg',
       source   => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
+      create   => '/etc/apt/sources.list.d/puppetlabs.list',
       require  => Exec['puppet-fetch-release'],
+      notify   => Exec['puppet-apt-get-update'],
+    }
+
+    exec { 'puppet-apt-get-update':
+      refreshonly => true,
+      command     => '/usr/bin/apt-get update',
     }
 
     class { 'apache':
@@ -94,6 +113,13 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       'puppetdb': {
         class { 'puppetdb': }
         class { 'puppetdb::master::config': }
+        file { '/etc/puppet/puppedb.conf':
+          content => "[main]\nserver = $::fqdn\nport = 8081\nsoft_write_failure = false\n",
+          ensure  => present,
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0644',
+        }
       }
     }
   }
