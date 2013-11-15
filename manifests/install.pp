@@ -18,22 +18,22 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     }
 
     if $::puppetversion =~ /^2/ {
-      '/var/lib/puppet/rack/config.ru':
+      file { '/var/lib/puppet/rack/config.ru':
         ensure  => present,
         source  => 'puppet:///modules/config.ru',
         owner   => 'puppet',
         group   => 'puppet',
         mode    => '0755',
-        require => File['/var/lib/puppet/rack'];
+        require => File['/var/lib/puppet/rack'],
 
     } else {
-      '/var/lib/puppet/rack/config.ru':
+      file { '/var/lib/puppet/rack/config.ru':
         ensure  => present,
         source  => 'puppet:///modules/config-new.ru',
         owner   => 'puppet',
         group   => 'puppet',
         mode    => '0755',
-        require => File['/var/lib/puppet/rack'];
+        require => File['/var/lib/puppet/rack']
 
     }
     exec { 'puppet-fetch-release':
