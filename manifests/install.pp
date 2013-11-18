@@ -3,6 +3,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
     class { 'apache':
       mpm_module => 'worker',
     }
+    class { 'apache::mod::headers': }
     class { 'apache::mod::ssl': }
     class { 'apache::mod::passenger':
       passenger_high_performance  => 'On',
@@ -29,15 +30,16 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       ssl_chain       => '/var/lib/puppet/ssl/ca/ca_crt.pem',
       ssl_ca          => '/var/lib/puppet/ssl/ca/ca_crt.pem',
       ssl_crl         => '/var/lib/puppet/ssl/ca/ca_crl.pem',
-      custom_fragment => "SSLVerifyClient optional\nSSLVerifyDepth  1\nSSLOptions +StdEnvVars +ExportCertData\nSSLProtocol -ALL +SSLv3 +TLSv1\nSSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP\nRequestHeader unset X-Forwarded-For\nRequestHeader set X-SSL-Subject %{SSL_CLIENT_S_DN}e\nRequestHeader set X-Client-DN %{SSL_CLIENT_S_DN}e\nRequestHeader set X-Client-Verify %{SSL_CLIENT_VERIFY}e\n",
+      request_headers => ['set X-Client-DN %{SSL_CLIENT_S_DN}e', 'set X-Client-Verify %{SSL_CLIENT_VERIFY}e']
+      custom_fragment => "SSLVerifyClient optional\nSSLVerifyDepth  1\nSSLOptions +StdEnvVars +ExportCertData\nSSLProtocol -ALL +SSLv3 +TLSv1\nSSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP\nRequestHeader unset X-Forwarded-For\nRequestHeader set X-SSL-Subject %{SSL_CLIENT_S_DN}e\nRequestHeader set ",
       directories     => [
-                      {
-                      path              => '/usr/share/puppet/rack/puppetmasterd/',
-                      options           => ['None', '-MultiViews'],
-                      order             => 'allow,deny',
-                      allow             => 'from all',
-                      allowOverride     => ['None'],
-                      passenger_enabled => 'on',
+                          {
+                          path              => '/usr/share/puppet/rack/puppetmasterd/',
+                          options           => ['None', '-MultiViews'],
+                          order             => 'allow,deny',
+                          allow             => 'from all',
+                          allowOverride     => ['None'],
+                          passenger_enabled => 'on',
                       },
                       ],
     }
