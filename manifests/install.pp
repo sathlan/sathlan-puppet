@@ -1,42 +1,5 @@
 class puppet::install ($use_db = false, $use_passenger = false, $add_agent = false, $puppetmaster_name='NONE'){
   if $use_passenger {
-    file {
-      '/var/lib/puppet/rack':
-        ensure => directory,
-        owner  => 'puppet',
-        group  => 'puppet',
-        mode   => '0755';
-      '/var/lib/puppet/rack/public':
-        ensure  => directory,
-        owner   => 'puppet',
-        group   => 'puppet',
-        mode    => '0755',
-        require => File['/var/lib/puppet/rack'];
-      '/var/lib/puppet/rack/public/puppet':
-        ensure  => '/usr/lib/ruby/1.8/puppet',
-        require => File['/var/lib/puppet/rack/public']
-    }
-
-    if $::puppetversion =~ /^2/ {
-      file { '/var/lib/puppet/rack/config.ru':
-        ensure  => present,
-        source  => 'puppet:///modules/puppet/config.ru',
-        owner   => 'puppet',
-        group   => 'puppet',
-        mode    => '0755',
-        require => File['/var/lib/puppet/rack'],
-      }
-    } else {
-      file { '/var/lib/puppet/rack/config.ru':
-        ensure  => present,
-        source  => 'puppet:///modules/puppet/config-new.ru',
-        owner   => 'puppet',
-        group   => 'puppet',
-        mode    => '0755',
-        require => File['/var/lib/puppet/rack'],
-      }
-    }
-
     class { 'apache':
       mpm_module => 'worker',
     }
