@@ -62,13 +62,8 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       }
       'puppetdb': {
         class { 'puppetdb': }
-        class { 'puppetdb::master::config': }
-        file { '/etc/puppet/puppetdb.conf':
-          content => "[main]\nserver = $::fqdn\nport = 8081\nsoft_write_failure = false\n",
-          ensure  => present,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0644',
+        class { 'puppetdb::master::config':
+          puppet_service_name => 'apache2',
         }
       }
     }
