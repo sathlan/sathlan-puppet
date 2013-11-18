@@ -1,5 +1,8 @@
 class puppet::install ($use_db = false, $use_passenger = false, $add_agent = false, $puppetmaster_name='NONE'){
   if $use_passenger {
+    package {'puppetmaster-passenger':
+      ensure => present,
+    }
     class { 'apache':
       mpm_module => 'worker',
     }
