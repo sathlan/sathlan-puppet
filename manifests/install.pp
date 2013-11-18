@@ -44,7 +44,6 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
                       ],
     }
   }
-
   if $use_db != 'UNDEF' {
     case $use_db {
       'mysql': {
@@ -61,6 +60,14 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         }
       }
       'puppetdb': {
+        file { '/etc/puppet/auth.conf':
+          content => template('puppet/auth.conf.erb'),
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0644',
+          require => Package['puppetmaster-passenger'],
+          notify  => Class['Apache::Service'],
+        }
         class { 'puppetdb': }
         class { 'puppetdb::master::config':
           puppet_service_name => 'apache2',
