@@ -96,26 +96,6 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         }
       }
       'puppetdb': {
-        exec { 'puppet-fetch-release':
-          command => "/usr/bin/wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
-          creates => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
-          cwd     => '/usr/src',
-        }
-
-        package { "puppetlabs-release-${lsbdistcodename}.deb":
-          provider => 'dpkg',
-          source   => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
-          require  => Exec['puppet-fetch-release'],
-          notify   => Exec['puppet-apt-get-update'],
-        }
-
-        exec { 'puppet-apt-get-update':
-          refreshonly => true,
-          command     => '/usr/bin/apt-get update',
-        }
-        package{ 'puppetmaster-passenger':
-          require => 'puppet-apt-get-update',
-        }
         class { 'puppetdb': }
         class { 'puppetdb::master::config': }
         file { '/etc/puppet/puppetdb.conf':
