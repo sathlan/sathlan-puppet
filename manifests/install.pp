@@ -36,23 +36,6 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
         require => File['/var/lib/puppet/rack'],
       }
     }
-    exec { 'puppet-fetch-release':
-      command => "/usr/bin/wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
-      creates => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
-      cwd     => '/usr/src',
-    }
-
-    package { "puppetlabs-release-${lsbdistcodename}.deb":
-      provider => 'dpkg',
-      source   => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
-      require  => Exec['puppet-fetch-release'],
-      notify   => Exec['puppet-apt-get-update'],
-    }
-
-    exec { 'puppet-apt-get-update':
-      refreshonly => true,
-      command     => '/usr/bin/apt-get update',
-    }
 
     class { 'apache':
       mpm_module => 'worker',
@@ -75,7 +58,7 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
 
     apache::vhost { $vhost:
       port            => '8140',
-      docroot         => '/var/lib/puppet/rack/public/',
+      docroot         => '/usr/share/puppet/rack/puppetmasterd/public/',
       default_vhost   => true,
       ssl             => true,
       ssl_cert        => "/var/lib/puppet/ssl/certs/${the_puppetmaster}.pem",
@@ -83,10 +66,10 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
       ssl_chain       => '/var/lib/puppet/ssl/ca/ca_crt.pem',
       ssl_ca          => '/var/lib/puppet/ssl/ca/ca_crt.pem',
       ssl_crl         => '/var/lib/puppet/ssl/ca/ca_crl.pem',
-      custom_fragment => "SSLVerifyClient optional\nSSLVerifyDepth  1\nSSLOptions +StdEnvVars\nSSLProtocol -ALL +SSLv3 +TLSv1\nSSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP\n",
+      custom_fragment => "SSLVerifyClient optional\nSSLVerifyDepth  1\nSSLOptions +StdEnvVars +ExportCertData\nSSLProtocol -ALL +SSLv3 +TLSv1\nSSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP\nRequestHeader unset X-Forwarded-For\nRequestHeader set X-SSL-Subject %{SSL_CLIENT_S_DN}e\nRequestHeader set X-Client-DN %{SSL_CLIENT_S_DN}e\nRequestHeader set X-Client-Verify %{SSL_CLIENT_VERIFY}e\n",
       directories     => [
                       {
-                      path              => '/var/lib/puppet/rack/public/',
+                      path              => '/usr/share/puppet/rack/puppetmasterd/',
                       options           => ['None', '-MultiViews'],
                       order             => 'allow,deny',
                       allow             => 'from all',
@@ -98,20 +81,41 @@ class puppet::install ($use_db = false, $use_passenger = false, $add_agent = fal
   }
 
   if $use_db != 'UNDEF' {
-    package{ 'libactiverecord-ruby1.8': }
     case $use_db {
       'mysql': {
+        package{ 'libactiverecord-ruby1.8': }
         package { 'libmysql-ruby1.8':
           ensure => present,
         }
         # TODO: find a better system to require thing.  It's all external at the moment.
       }
       'sqlite3': {
+        package{ 'libactiverecord-ruby1.8': }
         package{ ['sqlite3', 'libsqlite3-ruby1.8']:
           ensure => present,
         }
       }
       'puppetdb': {
+        exec { 'puppet-fetch-release':
+          command => "/usr/bin/wget http://apt.puppetlabs.com/puppetlabs-release-${lsbdistcodename}.deb",
+          creates => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
+          cwd     => '/usr/src',
+        }
+
+        package { "puppetlabs-release-${lsbdistcodename}.deb":
+          provider => 'dpkg',
+          source   => "/usr/src/puppetlabs-release-${lsbdistcodename}.deb",
+          require  => Exec['puppet-fetch-release'],
+          notify   => Exec['puppet-apt-get-update'],
+        }
+
+        exec { 'puppet-apt-get-update':
+          refreshonly => true,
+          command     => '/usr/bin/apt-get update',
+        }
+        package{ 'puppetmaster-passenger':
+          require => 'puppet-apt-get-update',
+        }
         class { 'puppetdb': }
         class { 'puppetdb::master::config': }
         file { '/etc/puppet/puppetdb.conf':
