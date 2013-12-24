@@ -4,7 +4,7 @@ source  'gitolite@labs.enovance.com:puppet-puppet'
 author  'Sofer Athlan-Guyot'
 license 'Apache License 2.0'
 summary 'Bootstrap a puppetmaster.'
-description 'One of the first module I made, ugly but working.
+description 'One of the first module I made, ugly but working.'
 project_page 'http://dev/null'
 
 ## Add dependencies, if any:
