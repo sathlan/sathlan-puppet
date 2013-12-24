@@ -12,4 +12,5 @@ dependency 'puppetlabs/puppetdb', '>= 3.0.0'
 dependency 'puppetlabs/postgresql','>= 3.2.0'
 dependency 'puppetlabs/apache', '>= 0.9.0'
 dependency 'puppetlabs/stdlib', '>= 2.3.0'
-dependency 'enovance/monitor', '>=1.0.0', 'gitolite@labs.enovance.com:enovance-monitor'
+## TODO: https://projects.puppetlabs.com/issues/22098
+#dependency 'enovance/monitor', '>=1.0.0', 'gitolite@labs.enovance.com:enovance-monitor'
