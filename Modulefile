@@ -8,9 +8,10 @@ description 'One of the first module I made, ugly but working.'
 project_page 'http://dev/null'
 
 ## Add dependencies, if any:
-dependency 'puppetlabs/puppetdb', '3.0.X'
-dependency 'puppetlabs/postgresql','3.2.X'
-dependency 'puppetlabs/apache', '0.9.X'
-dependency 'puppetlabs/stdlib', '4.1.X'
+# When this is reslove add X https://github.com/rodjek/librarian-puppet/issues/45
+dependency 'puppetlabs/puppetdb', '3.0.0'
+dependency 'puppetlabs/postgresql','3.2.0'
+dependency 'puppetlabs/apache', '0.9.0'
+dependency 'puppetlabs/stdlib', '4.1.0'
 ## TODO: https://projects.puppetlabs.com/issues/22098
 #dependency 'enovance/monitor', '>=1.0.0', 'gitolite@labs.enovance.com:enovance-monitor'
