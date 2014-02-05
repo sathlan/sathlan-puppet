@@ -7,65 +7,36 @@
 
   # enable plugins sync (facts)
   pluginsync        = true
-  configtimeout     = 600
+  configtimeout     = <%= scope.lookupvar('puppet::config_timeout') %>
 
 [master]
-<%   case @dbadapter
-      when 'mysql' -%>
-     # MySQL stored configuration
+<% case scope.lookupvar('puppet::dbadapter') when 'mysql' -%>
   storeconfigs      = true
   dbadapter         = 'mysql'
-  dbuser            = <%= @dbuser %>
-  dbpassword        = <%= @dbpassword %>
-  dbserver          = <%= @dbserver %>
-  dbsocket          = <%= @dbsocket %>
+  dbuser            = <%= scope.lookupvar('puppet::dbuser') %>
+  dbpassword        = <%= scope.lookupvar('puppet::dbpassword') %>
+  dbserver          = <%= scope.lookupvar('puppet::dbserver') %>
+  dbsocket          = '/var/run/mysqld/mysqld.sock'
 <%  when 'sqlite3' -%>
   storeconfigs      = true
   dbadapter         = 'sqlite3'
 <% when 'puppetdb' -%>
-  storeconfigs      = true
+  storeconfigs         = true
   storeconfigs_backend = puppetdb
-<%   end %>
-  certname          = <%= @certname %>
-  <% if @dns_alt_names != 'UNDEF' -%>
-  dns_alt_names     = <%= @dns_alt_names %>
-  <% end -%>
-  # reporting
-  reports           = <%= reports %>
-<% if reporturl -%>
-  reporturl = <%= reporturl %>
+<% end %>
+
+  reports           = <%= scope.lookupvar('puppet::reports') %>
+<% if scope.lookupvar('puppet::reporturl') -%>
+  reporturl = <%= scope.lookupvar('puppet::reporturl') %>
 <% end -%>
 
-<% if @use_passenger -%>
    # These are needed when the puppetmaster is run by passenger
    # and can safely be removed if webrick is used.
    ssl_client_header = SSL_CLIENT_S_DN
    ssl_client_verify_header = SSL_CLIENT_VERIFY
-<% end -%>
 
-<% environments.each do |e, p| -%>
+<% scope.lookupvar('puppet::environments').each do |e, p| -%>
 [<%= e -%>]
   modulepath        = <%= p['modules_path'] %>
   manifest          = <%= p['manifest_path'] %>
-<% end -%>
-
-<% if @add_agent -%>
-
-[agent]
-  # puppet master address
-  server            = <%= @certname %>
-
-  # synchronize fact
-  pluginsync        = true
-
-  # set environment
-  environment       = production
-
-  # enable reporting
-  report            = true
-  certname          = <%= @certname %>
-<% if @configtimeout != 'UNDEF' -%>
-  configtimeout     = <%= @configtimeout %>
-<% end %>
-
 <% end -%>
