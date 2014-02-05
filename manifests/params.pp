@@ -46,7 +46,8 @@ class puppet::params {
   $use_db                = 'puppetdb'
   $reporturl             = false
   $config_timeout        = 300
-  $report                = 'log'
+  $reports               = 'log'
   $dbserver              = '127.0.0.1'
+  $dbuser                = 'puppet'
   $puppet_version        = '3.4.2-1' #2.7.25-1
 }

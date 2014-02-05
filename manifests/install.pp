@@ -24,7 +24,15 @@ class puppet::install (
     }
     'mysql': {
       class { '::mysql::server':
-        root_password    => $puppet::dbpassword,
+        root_password    => "${puppet::dbpassword}root",
+      }
+      class { 'mysql::bindings':
+        ruby_enable => true,
+      }
+      mysql_user { "${puppet::mysql_user}@127.0.0.1":
+        ensure        => present,
+        password_hash => mysql_password($puppet::dbuser),
+        require       => Class['mysql::server::service'],
       }
     }
     default: {
