@@ -1,6 +1,6 @@
 class puppet::install (
   ){
-  package { $puppet::puppetmaster_passenger_package:
+  package { $puppet::puppetmaster_package_name:
     ensure => $puppet::version,
   }
 
@@ -14,12 +14,16 @@ class puppet::install (
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
-        require => Package['puppetmaster-passenger'],
+        require => Package[$puppet::puppetmaster_package_name],
         notify  => Class['Apache::Service'],
       }
       class { 'puppetdb': }
       class { 'puppetdb::master::config':
-        puppet_service_name => 'apache2',
+        puppet_service_name => $puppet::puppet_srv_name,
+      }
+      File <|name == '/etc/puppet/routes.yaml'|> {
+        owner => 'root',
+        group => 'puppet',
       }
     }
     'mysql': {

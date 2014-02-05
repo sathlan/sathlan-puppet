@@ -2,7 +2,7 @@ class puppet::config () {
   file { '/etc/puppet/puppet.conf':
     ensure  => present,
     content => template('puppet/puppet.conf.erb'),
-    owner   => 'puppet',
+    owner   => 'root',
     group   => 'puppet',
   }
 
@@ -32,7 +32,7 @@ class puppet::config () {
 
   apache::vhost { $::puppet::puppetmaster_name:
     port            => '8140',
-    docroot         => '/usr/share/puppet/rack/puppetmasterd/public/',
+    docroot         => $puppet::rack_docroot,
     default_vhost   => true,
     ssl             => true,
     ssl_cert        => "/var/lib/puppet/ssl/certs/${puppet::puppetmaster_name}.pem",

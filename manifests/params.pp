@@ -4,17 +4,17 @@ class puppet::params {
     'centos', 'redhat', 'fedora': {
       $puppetmaster_package_name      = 'puppet-server'
       $puppetmaster_service_name      = 'puppetmaster'
-      $puppetmaster_passenger_package = 'puppetmaster-passenger'
       package { 'puppetlabs-release':
         ensure   => present,
         source   => "http://yum.puppetlabs.com/el/6/products/x86_64/puppetlabs-release-6.10.noarch.rpm",
         provider => rpm,
       }
+      $puppet_version        = '3.4.2-1.el6' #2.7.25-1
+      $puppet_srv_name       = 'httpd'
     }
     'ubuntu', 'debian': {
-      $puppetmaster_package_name      = 'puppetmaster'
+      $puppetmaster_package_name      = 'puppetmaster-passenger'
       $puppetmaster_service_name      = 'puppetmaster'
-      $puppetmaster_passenger_package = 'puppetmaster-passenger'
       exec { 'get_repo':
         command => "wget https://apt.puppetlabs.com/puppetlabs-release-${::lsbdistcodename}",
         cwd     => '/usr/src',
@@ -26,6 +26,8 @@ class puppet::params {
         provider => 'dpkg',
         source   => "/usr/src/puppetlabs-release-${::lsbdistcodename}.deb",
       }
+      $puppet_version        = '3.4.2-1' #2.7.25-1
+      $puppet_srv_name       = 'apache2'
     }
 
     default: {
@@ -49,5 +51,6 @@ class puppet::params {
   $reports               = 'log'
   $dbserver              = '127.0.0.1'
   $dbuser                = 'puppet'
-  $puppet_version        = '3.4.2-1' #2.7.25-1
+  $dbadapter             = 'puppetdb'
+  $rack_docroot          = '/usr/share/puppet/rack/puppetmasterd/public'
 }

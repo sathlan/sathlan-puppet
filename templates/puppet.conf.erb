@@ -7,19 +7,15 @@
 
   # enable plugins sync (facts)
   pluginsync        = true
-  configtimeout     = 600
-
-<% if @configtimeout != 'UNDEF' -%>
-  configtimeout     = <%= @configtimeout %>
-<% end %>
+  configtimeout     = <%= scope.lookupvar('puppet::config_timeout') %>
 
 [master]
-<% case @dbadapter when 'mysql' -%>
+<% case scope.lookupvar('puppet::dbadapter') when 'mysql' -%>
   storeconfigs      = true
   dbadapter         = 'mysql'
-  dbuser            = <%= @dbuser %>
-  dbpassword        = <%= @dbpassword %>
-  dbserver          = <%= @dbserver %>
+  dbuser            = <%= scope.lookupvar('puppet::dbuser') %>
+  dbpassword        = <%= scope.lookupvar('puppet::dbpassword') %>
+  dbserver          = <%= scope.lookupvar('puppet::dbserver') %>
   dbsocket          = '/var/run/mysqld/mysqld.sock'
 <%  when 'sqlite3' -%>
   storeconfigs      = true
@@ -29,9 +25,9 @@
   storeconfigs_backend = puppetdb
 <% end %>
 
-  reports           = <%= reports %>
-<% if reporturl -%>
-  reporturl = <%= reporturl %>
+  reports           = <%= scope.lookupvar('puppet::reports') %>
+<% if scope.lookupvar('puppet::reporturl') -%>
+  reporturl = <%= scope.lookupvar('puppet::reporturl') %>
 <% end -%>
 
    # These are needed when the puppetmaster is run by passenger
@@ -39,26 +35,8 @@
    ssl_client_header = SSL_CLIENT_S_DN
    ssl_client_verify_header = SSL_CLIENT_VERIFY
 
-<% environments.each do |e, p| -%>
+<% scope.lookupvar('puppet::environments').each do |e, p| -%>
 [<%= e -%>]
   modulepath        = <%= p['modules_path'] %>
   manifest          = <%= p['manifest_path'] %>
-<% end -%>
-
-<% if @add_agent -%>
-
-[agent]
-  # puppet master address
-  server            = <%= @certname %>
-
-  # synchronize fact
-  pluginsync        = true
-
-  # set environment
-  environment       = production
-
-  # enable reporting
-  report            = true
-  certname          = <%= @certname %>
-
 <% end -%>
