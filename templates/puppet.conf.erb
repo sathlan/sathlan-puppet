@@ -9,39 +9,35 @@
   pluginsync        = true
   configtimeout     = 600
 
+<% if @configtimeout != 'UNDEF' -%>
+  configtimeout     = <%= @configtimeout %>
+<% end %>
+
 [master]
-<%   case @dbadapter
-      when 'mysql' -%>
-     # MySQL stored configuration
+<% case @dbadapter when 'mysql' -%>
   storeconfigs      = true
   dbadapter         = 'mysql'
   dbuser            = <%= @dbuser %>
   dbpassword        = <%= @dbpassword %>
   dbserver          = <%= @dbserver %>
-  dbsocket          = <%= @dbsocket %>
+  dbsocket          = '/var/run/mysqld/mysqld.sock'
 <%  when 'sqlite3' -%>
   storeconfigs      = true
   dbadapter         = 'sqlite3'
 <% when 'puppetdb' -%>
-  storeconfigs      = true
+  storeconfigs         = true
   storeconfigs_backend = puppetdb
-<%   end %>
-  certname          = <%= @certname %>
-  <% if @dns_alt_names != 'UNDEF' -%>
-  dns_alt_names     = <%= @dns_alt_names %>
-  <% end -%>
-  # reporting
+<% end %>
+
   reports           = <%= reports %>
 <% if reporturl -%>
   reporturl = <%= reporturl %>
 <% end -%>
 
-<% if @use_passenger -%>
    # These are needed when the puppetmaster is run by passenger
    # and can safely be removed if webrick is used.
    ssl_client_header = SSL_CLIENT_S_DN
    ssl_client_verify_header = SSL_CLIENT_VERIFY
-<% end -%>
 
 <% environments.each do |e, p| -%>
 [<%= e -%>]
@@ -64,8 +60,5 @@
   # enable reporting
   report            = true
   certname          = <%= @certname %>
-<% if @configtimeout != 'UNDEF' -%>
-  configtimeout     = <%= @configtimeout %>
-<% end %>
 
 <% end -%>
