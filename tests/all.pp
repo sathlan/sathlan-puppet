@@ -5,15 +5,7 @@
 
 class { 'puppet':
   dbadapter         => 'puppetdb',
-  dbuser            => 'puppet',
   dbpassword        => 'the_password:)',
-  dbserver          => '127.0.0.1',
-  dbsocket          => '/var/run/mysqld/mysqld.sock',
-  certname          => $::fqdn,
-  dns_alt_names     => ' ',
-  add_agent         => true,
-  use_passenger     => true,
-  puppetmaster_name => $::fqdn,
   environments      => {
     ci => {
       'manifest_path' => '/etc/puppet/environments/ci/modules/puppet/tests/all.pp',
