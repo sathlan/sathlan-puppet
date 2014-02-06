@@ -17,7 +17,9 @@ class puppet::install (
         require => Package[$puppet::puppetmaster_package_name],
         notify  => Class['Apache::Service'],
       }
-      class { 'puppetdb': }
+      class { 'puppetdb':
+        database_password => $puppet::dbpassword
+      }
       class { 'puppetdb::master::config':
         puppet_service_name => $puppet::puppet_srv_name,
       }
