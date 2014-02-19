@@ -10,6 +10,7 @@
   configtimeout     = <%= scope.lookupvar('puppet::config_timeout') %>
 
 [master]
+  certname          = <%= @fqdn %>
 <% case scope.lookupvar('puppet::dbadapter') when 'mysql' -%>
   storeconfigs      = true
   dbadapter         = 'mysql'
